@@ -1,0 +1,21 @@
+{
+    "name": "danog/renamebot",
+    "description": "Telegram file rename bot based on MadelineProto",
+    "type": "project",
+    "require": {
+        "danog/madelineproto": "^8"
+    },
+    "minimum-stability": "beta",
+    "license": "AGPL-3.0-only",
+    "authors": [
+        {
+            "name": "Daniil Gentili",
+            "email": "daniil@daniil.it"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "symfony/thanks": true
+        }
+    }
+}

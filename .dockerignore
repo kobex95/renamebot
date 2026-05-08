@@ -1,0 +1,15 @@
+Dockerfile
+.dockerignore
+.git
+.gitignore
+.github
+README.md
+LICENSE
+data/
+bot.madeline
+madeline.php
+vendor/
+*.log
+.env
+.idea
+.vscode
