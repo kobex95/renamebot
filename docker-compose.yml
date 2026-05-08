@@ -2,13 +2,16 @@ version: '3.8'
 
 services:
   renamebot:
+    # 从 GitHub Container Registry 拉取预构建镜像（与下方 build 二选一）
+    image: ghcr.io/kobex95/renamebot:latest
+    # 本地构建（如果同时存在 image 和 build，构建后会 tag 为上方 image 名称）
     build: .
     container_name: renamebot
     restart: unless-stopped
     environment:
       # 必填：Bot Token（从 @BotFather 获取）
       - BOT_TOKEN=${BOT_TOKEN}
-      # 可选：API ID 和 Hash（如果不提供，机器人将使用默认值）
+      # 可选：API ID 和 Hash（从 https://my.telegram.org/apps 获取）
       - API_ID=${API_ID}
       - API_HASH=${API_HASH}
       # 会话文件存储目录（容器内路径）
@@ -17,10 +20,10 @@ services:
     volumes:
       # 持久化会话文件，避免重新登录
       - ./data:/app/data
-    # 可选：资源限制
-    # deploy:
-    #   resources:
-    #     limits:
-    #       memory: 512M
+    # 资源限制
+    deploy:
+      resources:
+        limits:
+          memory: 512M
     stdin_open: true
     tty: true
