@@ -1,62 +1,57 @@
 # renamebot
 
-Telegram file rename bot based on [MadelineProto »](https://docs.madelineproto.xyz).  
+基于 [MadelineProto](https://docs.madelineproto.xyz) 的 Telegram 文件重命名机器人，支持 2GB+ 大文件在线处理，**不占用磁盘空间**。
 
-Download+reuploads are done on the fly, **no disk space is used**.
+## 快速安装
 
-## Installation
+### 方法一：Docker 部署（推荐）
 
+```bash
+# 1. 克隆仓库
+git clone https://github.com/kobex95/renamebot.git && cd renamebot
+
+# 2. 配置环境变量
+cp .env.example .env
+# 编辑 .env，填入 BOT_TOKEN（从 @BotFather 获取）
+
+# 3. 启动
+docker compose up -d
+
+# 4. 查看日志
+docker compose logs -f
 ```
+
+> 镜像自动推送到 [GHCR](https://github.com/kobex95/renamebot/pkgs/container/renamebot)：`ghcr.io/kobex95/renamebot:latest`
+
+### 方法二：直接运行
+
+```bash
 wget https://github.com/kobex95/renamebot/raw/main/bot.php && php bot.php
 ```
 
-Don't forget to install the [required dependencies](https://docs.madelineproto.xyz/docs/REQUIREMENTS.html) for MadelineProto, as well as **ffmpeg** and **yt-dlp**.
+需要安装依赖：**ffmpeg**、**yt-dlp**，以及 MadelineProto 的[运行环境要求](https://docs.madelineproto.xyz/docs/REQUIREMENTS.html)。
 
-## Docker 部署（推荐）
+## 使用方法
 
-### 前置要求
-- 安装 [Docker](https://docs.docker.com/get-docker/) 和 [Docker Compose](https://docs.docker.com/compose/install/)
-- 从 [@BotFather](https://t.me/BotFather) 获取 Bot Token
-- （可选）从 [my.telegram.org](https://my.telegram.org/apps) 获取 API ID 和 API Hash
+| 命令 | 说明 |
+|------|------|
+| `/start` | 查看帮助 |
+| `/upload <url> [文件名]` | 下载并上传文件/YouTube 视频 |
+| 发送文件 | 触发重命名流程 |
 
-### 使用方法
-1. 克隆仓库：
-   ```bash
-   git clone https://github.com/kobex95/renamebot.git
-   cd renamebot
-   ```
+## 环境变量
 
-2. 创建 `.env` 文件并填写必要信息：
-   ```ini
-   BOT_TOKEN=你的机器人令牌
-   API_ID=你的API_ID      # 可选
-   API_HASH=你的API_HASH  # 可选
-   ```
+| 变量 | 必填 | 说明 |
+|------|:--:|------|
+| `BOT_TOKEN` | ✅ | 机器人令牌（@BotFather） |
+| `API_ID` | ❌ | my.telegram.org 获取 |
+| `API_HASH` | ❌ | my.telegram.org 获取 |
+| `SESSION_DIR` | ❌ | 会话存储目录，默认 `.` |
 
-3. 启动容器：
-   ```bash
-   docker compose up -d
-   ```
+## 数据持久化
 
-4. 查看日志：
-   ```bash
-   docker compose logs -f
-   ```
+Docker 部署时，会话文件保存在 `./data` 目录，重启/升级不丢失登录状态。
 
-### 数据持久化
-会话文件存储在 `./data` 目录下，升级容器或重启不会丢失登录状态。
+## 自动构建
 
-### 从源码构建
-```bash
-docker build -t renamebot .
-docker run -e BOT_TOKEN=你的令牌 -v ./data:/app/data renamebot
-```
-
-### GitHub Actions 自动构建
-本项目配置了 GitHub Actions 工作流，每当推送代码到 `main` 或 `master` 分支，或创建 `v*` 标签时，会自动构建 Docker 镜像并推送到 Docker Hub。
-
-如需使用，请在仓库的 Secrets 中添加：
-- `DOCKER_USERNAME`：你的 Docker Hub 用户名
-- `DOCKER_PASSWORD`：你的 Docker Hub 密码或访问令牌
-
-工作流文件位于 `.github/workflows/docker-publish.yml`。
+推送代码到 `main` 或创建 `v*` 标签时，GitHub Actions 自动构建镜像并推送到 GitHub Container Registry，无需额外配置。
